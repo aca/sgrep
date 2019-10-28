@@ -13,39 +13,39 @@ var fs *flag.FlagSet
 
 type filterFunc func(string) string
 
-var argMap map[string]filterFunc
+var funcMap map[string]filterFunc
 
 func init() {
-	argMap = make(map[string]filterFunc)
-	argMap["hostname"] = filterHostname
-	argMap["ipv4"] = filterIPv4
-	argMap["ip"] = filterIPv4
-	argMap["email"] = filterEmail
-	argMap["url"] = filterHTTP
-	argMap["http"] = filterHTTP
-	argMap["https"] = filterHTTP
+	funcMap = make(map[string]filterFunc)
+	funcMap["hostname"] = filterHostname
+	funcMap["ipv4"] = filterIPv4
+	funcMap["ip"] = filterIPv4
+	funcMap["email"] = filterEmail
+	funcMap["url"] = filterHTTP
+	funcMap["http"] = filterHTTP
+	funcMap["https"] = filterHTTP
 }
 
 func main() {
 	fs = flag.NewFlagSet("root", flag.ExitOnError)
 	fs.Parse(os.Args)
 
-	var filter filterFunc
-
-	filter, ok := argMap[strings.ToLower(fs.Arg(1))]
-	if !ok {
-		for k, _ := range argMap {
-			fmt.Println(k)
-		}
-
-		return
-	}
-
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if s := filter(line); s != "" {
-			fmt.Println(s)
+		matched := []string{}
+
+		for _, arg := range fs.Args() {
+			filter, ok := funcMap[strings.ToLower(arg)]
+			if !ok {
+				continue
+			}
+			if s := filter(line); s != "" {
+				matched = append(matched, s)
+			}
+		}
+		if len(matched) != 0 {
+			fmt.Println(strings.Join(matched, " "))
 		}
 	}
 
