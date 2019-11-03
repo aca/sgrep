@@ -78,6 +78,7 @@ func main() {
 
 func printHelp() {
 	fmt.Fprintf(os.Stderr, `usage: sgrep [flags] pattern...
+
 example: 
  cat txt | sgrep hostname ipv4
 
