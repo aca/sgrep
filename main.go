@@ -6,29 +6,56 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strings"
 )
 
+// seperator string
+var sep string
+var help string
+
 var fs *flag.FlagSet
 
-type filterFunc func(string) string
+type filterFunc func(string) []string
 
 var funcMap map[string]filterFunc
 
 func init() {
 	funcMap = make(map[string]filterFunc)
 	funcMap["hostname"] = filterHostname
+
 	funcMap["ipv4"] = filterIPv4
+	funcMap["ipv6"] = filterIPv6
 	funcMap["ip"] = filterIPv4
+
 	funcMap["email"] = filterEmail
 	funcMap["url"] = filterHTTP
 	funcMap["http"] = filterHTTP
-	funcMap["https"] = filterHTTP
+
+	funcMap["number"] = filterNumber
+	funcMap["num"] = filterNumber
+
+	funcMap["alpha"] = filterAlpha
 }
 
 func main() {
 	fs = flag.NewFlagSet("root", flag.ExitOnError)
-	fs.Parse(os.Args)
+	fs.StringVar(&sep, "s", " ", "seperator")
+	fs.Parse(os.Args[1:])
+
+	// validate arguments
+	for _, arg := range fs.Args() {
+		if arg == "help" {
+			printHelp()
+			os.Exit(0)
+		}
+
+		_, ok := funcMap[strings.ToLower(arg)]
+		if !ok {
+			fmt.Fprintf(os.Stderr, "invalid argument %s, check 'sgrep help'\n", arg)
+			os.Exit(1)
+		}
+	}
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -36,16 +63,11 @@ func main() {
 		matched := []string{}
 
 		for _, arg := range fs.Args() {
-			filter, ok := funcMap[strings.ToLower(arg)]
-			if !ok {
-				continue
-			}
-			if s := filter(line); s != "" {
-				matched = append(matched, s)
-			}
+			filter := funcMap[strings.ToLower(arg)]
+			matched = append(matched, filter(line)...)
 		}
 		if len(matched) != 0 {
-			fmt.Println(strings.Join(matched, " "))
+			fmt.Println(strings.Join(matched, sep))
 		}
 	}
 
@@ -54,32 +76,24 @@ func main() {
 	}
 }
 
-func filterHostname(line string) string {
-	match := hostnameRegexRFC952.FindAllString(line, -1)
+func printHelp() {
+	fmt.Fprintf(os.Stderr, `usage: sgrep [flags] pattern...
+example: 
+ cat txt | sgrep hostname ipv4
 
-	// filter single word hostname which is obviously not usual
-	n := 0
-	for _, v := range match {
-		if strings.Contains(v, ".") {
-			match[n] = v
-			n++
-		}
+`)
+
+	fmt.Fprintf(os.Stderr, "pattern:\n")
+
+	validArg := []string{}
+	for arg, _ := range funcMap {
+		validArg = append(validArg, arg)
 	}
-	match = match[:n]
-	return strings.Join(match, " ")
-}
+	sort.Strings(validArg)
+	for _, arg := range validArg {
+		fmt.Fprintf(os.Stderr, " %s\n", arg)
+	}
 
-func filterEmail(line string) string {
-	match := emailRegex.FindAllString(line, -1)
-	return strings.Join(match, " ")
-}
-
-func filterIPv4(line string) string {
-	match := ipv4Regex.FindAllString(line, -1)
-	return strings.Join(match, " ")
-}
-
-func filterHTTP(line string) string {
-	match := httpRegex.FindAllString(line, -1)
-	return strings.Join(match, " ")
+	fmt.Fprintln(os.Stderr, "\nflag:")
+	fs.PrintDefaults()
 }

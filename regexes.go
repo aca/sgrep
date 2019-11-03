@@ -3,9 +3,10 @@ package main
 import "regexp"
 
 const (
-	// https://stackoverflow.com/questions/5284147/validating-ipv4-addresses-with-regexp
-	// TODO: fix, match 1.1.1.01
-	ipv4RegexString = `(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)`
+	ipv4RegexString = `([0-9]{0,3}\.){3}[0-9]{0,3}`
+
+	// https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses
+	ipv6RegexString = `(fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|2[0-4][0-9]|1{0,1}[0-9]{0,1}[0-9])\.{3,3})(25[0-5]|2[0-4][0-9]|1{0,1}[0-9]{0,1}[0-9])|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|2[0-4][0-9]|1{0,1}[0-9]{0,1}[0-9])\.{3,3})(25[0-5]|2[0-4][0-9]|1{0,1}[0-9]{0,1}[0-9])|:((:[0-9a-fA-F]{1,4}){1,7}|:))`
 
 	// https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
 	httpRegexString = `https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`
@@ -38,7 +39,6 @@ const (
 	uUIDRFC4122RegexString           = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
 	aSCIIRegexString                 = "[\x00-\x7F]*"
 	printableASCIIRegexString        = "[\x20-\x7E]*"
-	// multibyteRegexString             = "[^\x00-\x7F]"
 	dataURIRegexString               = "data:.+\\/(.+);base64"
 	latitudeRegexString              = "[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?)"
 	longitudeRegexString             = "[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)"
@@ -51,13 +51,11 @@ const (
 	ethAddressRegexString            = `0x[0-9a-fA-F]{40}`
 	ethAddressUpperRegexString       = `0x[0-9A-F]{40}`
 	ethAddressLowerRegexString       = `0x[0-9a-f]{40}`
-	// uRLEncodedRegexString            = `(%[A-Fa-f0-9]{2})`
-	// hTMLEncodedRegexString           = `&#[x]?([0-9a-fA-F]{2})|(&gt)|(&lt)|(&quot)|(&amp)+[;]?`
-	// hTMLRegexString                  = `<[/]?([a-zA-Z]+).*?>`
 )
 
 var (
 	ipv4Regex = regexp.MustCompile(ipv4RegexString)
+	ipv6Regex = regexp.MustCompile(ipv6RegexString)
 	httpRegex = regexp.MustCompile(httpRegexString)
 
 	alphaRegex                 = regexp.MustCompile(alphaRegexString)
@@ -87,7 +85,6 @@ var (
 	uUIDRFC4122Regex           = regexp.MustCompile(uUIDRFC4122RegexString)
 	aSCIIRegex                 = regexp.MustCompile(aSCIIRegexString)
 	printableASCIIRegex        = regexp.MustCompile(printableASCIIRegexString)
-	// multibyteRegex             = regexp.MustCompile(multibyteRegexString)
 	dataURIRegex               = regexp.MustCompile(dataURIRegexString)
 	latitudeRegex              = regexp.MustCompile(latitudeRegexString)
 	longitudeRegex             = regexp.MustCompile(longitudeRegexString)
@@ -100,7 +97,4 @@ var (
 	ethAddressRegex            = regexp.MustCompile(ethAddressRegexString)
 	ethaddressRegexUpper       = regexp.MustCompile(ethAddressUpperRegexString)
 	ethAddressRegexLower       = regexp.MustCompile(ethAddressLowerRegexString)
-	// uRLEncodedRegex            = regexp.MustCompile(uRLEncodedRegexString)
-	// hTMLEncodedRegex           = regexp.MustCompile(hTMLEncodedRegexString)
-	// hTMLRegex                  = regexp.MustCompile(hTMLRegexString)
 )
