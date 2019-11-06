@@ -11,6 +11,13 @@ const (
 	// https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
 	httpRegexString = `https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`
 
+	// git commit (40 length SHA1 sum)
+	commitRegexString = `\b([a-f0-9]){40}\b`
+
+	// macAddressRegexString = `(?:[[:xdigit:]]{2}([-:]))(?:[[:xdigit:]]{2}\\1){4}[[:xdigit:]]{2}`
+	macAddressRegexString = "([[:xdigit:]]{2}[:-]){5}([[:xdigit:]]{2})"
+	// macAddressRegexString = `([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})`
+
 	// based on https://github.com/go-playground/validator/blob/v9/regexes.go
 	alphaRegexString                 = "[a-zA-Z]+"
 	alphaNumericRegexString          = "[a-zA-Z0-9]+"
@@ -57,6 +64,8 @@ var (
 	ipv4Regex = regexp.MustCompile(ipv4RegexString)
 	ipv6Regex = regexp.MustCompile(ipv6RegexString)
 	httpRegex = regexp.MustCompile(httpRegexString)
+	commitRegex = regexp.MustCompile(commitRegexString)
+	macAddressRegex = regexp.MustCompile(macAddressRegexString)
 
 	alphaRegex                 = regexp.MustCompile(alphaRegexString)
 	alphaNumericRegex          = regexp.MustCompile(alphaNumericRegexString)
@@ -97,4 +106,5 @@ var (
 	ethAddressRegex            = regexp.MustCompile(ethAddressRegexString)
 	ethaddressRegexUpper       = regexp.MustCompile(ethAddressUpperRegexString)
 	ethAddressRegexLower       = regexp.MustCompile(ethAddressLowerRegexString)
+	
 )

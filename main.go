@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sort"
 	"strings"
 )
 
@@ -19,23 +18,26 @@ var fs *flag.FlagSet
 type filterFunc func(string) []string
 
 var funcMap map[string]filterFunc
+var cmdList [][]string
+
+func addCommand(f filterFunc, aliases ...string) {
+	for _, alias := range aliases {
+		funcMap[alias] = f
+	}
+	cmdList = append(cmdList, aliases)
+}
 
 func init() {
 	funcMap = make(map[string]filterFunc)
-	funcMap["hostname"] = filterHostname
-
-	funcMap["ipv4"] = filterIPv4
-	funcMap["ipv6"] = filterIPv6
-	funcMap["ip"] = filterIPv4
-
-	funcMap["email"] = filterEmail
-	funcMap["url"] = filterHTTP
-	funcMap["http"] = filterHTTP
-
-	funcMap["number"] = filterNumber
-	funcMap["num"] = filterNumber
-
-	funcMap["alpha"] = filterAlpha
+	addCommand(filterHostname, "hostname", "host")
+	addCommand(filterIPv4, "ipv4", "ip")
+	addCommand(filterIPv6, "ipv6")
+	addCommand(filterEmail, "email")
+	addCommand(filterHTTP, "url", "http")
+	addCommand(filterNumber, "num", "number")
+	addCommand(filterAlpha, "alpha")
+	addCommand(filterCommit, "commit")
+	addCommand(filterMacAddress, "mac", "macaddress")
 }
 
 func main() {
@@ -80,19 +82,16 @@ func printHelp() {
 	fmt.Fprintf(os.Stderr, `usage: sgrep [flags] pattern...
 
 example: 
- cat txt | sgrep hostname ipv4
+  cat txt | sgrep hostname ipv4
 
 `)
 
 	fmt.Fprintf(os.Stderr, "pattern:\n")
 
-	validArg := []string{}
-	for arg, _ := range funcMap {
-		validArg = append(validArg, arg)
-	}
-	sort.Strings(validArg)
-	for _, arg := range validArg {
-		fmt.Fprintf(os.Stderr, " %s\n", arg)
+	for _, cmd := range cmdList {
+		s := strings.Join(cmd, ", ")
+
+		fmt.Fprintf(os.Stderr, "  %v\n", s)
 	}
 
 	fmt.Fprintln(os.Stderr, "\nflag:")

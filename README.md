@@ -15,22 +15,21 @@ Usage
 usage: sgrep [flags] pattern...
 
 example: 
- cat txt | sgrep hostname ipv4
+  cat txt | sgrep hostname ipv4
+  ifconfig wlp2s0 | sgrep mac
 
 pattern:
- alpha
- email
- hostname
- http
- ip
- ipv4
- ipv6
- num
- number
- url
+  hostname, host
+  ipv4, ip
+  ipv6
+  email
+  url, http
+  num, number
+  alpha
+  commit
+  mac, macaddress
 
 flag:
   -s string
     	seperator (default " ")
 ```
-

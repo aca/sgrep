@@ -19,6 +19,10 @@ func filterHostname(line string) []string {
 	return match[:n]
 }
 
+func filterCommit(line string) []string {
+	return commitRegex.FindAllString(line, -1)
+}
+
 func filterEmail(line string) []string {
 	return emailRegex.FindAllString(line, -1)
 }
@@ -49,4 +53,8 @@ func filterNumber(line string) []string {
 
 func filterAlpha(line string) []string {
 	return alphaRegex.FindAllString(line, -1)
+}
+
+func filterMacAddress(line string) []string {
+	return macAddressRegex.FindAllString(line, -1)
 }
