@@ -59,9 +59,13 @@ func main() {
 		}
 	}
 
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		line := scanner.Text()
+	buf, err := ioutil.ReadAll(os.Stdin)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	lines := strings.Split(string(buf), "\n")
+	for _, line := range lines {
 		matched := []string{}
 
 		for _, arg := range fs.Args() {
@@ -71,10 +75,7 @@ func main() {
 		if len(matched) != 0 {
 			fmt.Println(strings.Join(matched, sep))
 		}
-	}
 
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
 	}
 }
 
