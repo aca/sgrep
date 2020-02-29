@@ -30,6 +30,8 @@ pattern:
   mac, macaddress
 
 flag:
+  -f int
+    	field selector, replaces "awk '{print $3}'" as "-f3"
   -s string
     	seperator (default " ")
 ```

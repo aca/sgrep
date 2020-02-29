@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -11,6 +11,7 @@ import (
 
 // seperator string
 var sep string
+var field int
 var help string
 
 var fs *flag.FlagSet
@@ -41,8 +42,11 @@ func init() {
 }
 
 func main() {
-	fs = flag.NewFlagSet("root", flag.ExitOnError)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
+	fs = flag.NewFlagSet("sgrep", flag.ExitOnError)
 	fs.StringVar(&sep, "s", " ", "seperator")
+	fs.IntVar(&field, "f", 0, `field selector, replaces "awk '{print $3}'" as "-f3"`)
 	fs.Parse(os.Args[1:])
 
 	// validate arguments
@@ -72,6 +76,15 @@ func main() {
 			filter := funcMap[strings.ToLower(arg)]
 			matched = append(matched, filter(line)...)
 		}
+
+		if field != 0 {
+			if len(matched) >= field {
+				matched = append([]string{}, matched[field-1])
+			} else {
+				matched = []string{}
+			}
+		}
+
 		if len(matched) != 0 {
 			fmt.Println(strings.Join(matched, sep))
 		}
