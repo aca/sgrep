@@ -10,16 +10,20 @@ import (
 )
 
 // seperator string
-var sep string
-var field int
-var help string
+var (
+	sep   string
+	field int
+	help  string
+)
 
 var fs *flag.FlagSet
 
 type filterFunc func(string) []string
 
-var funcMap map[string]filterFunc
-var cmdList [][]string
+var (
+	funcMap map[string]filterFunc
+	cmdList [][]string
+)
 
 func addCommand(f filterFunc, aliases ...string) {
 	for _, alias := range aliases {
@@ -69,6 +73,8 @@ func main() {
 	}
 
 	lines := strings.Split(string(buf), "\n")
+
+	nomatch := true
 	for _, line := range lines {
 		matched := []string{}
 
@@ -87,8 +93,12 @@ func main() {
 
 		if len(matched) != 0 {
 			fmt.Println(strings.Join(matched, sep))
+			nomatch = false
 		}
+	}
 
+	if nomatch {
+		os.Exit(1)
 	}
 }
 
