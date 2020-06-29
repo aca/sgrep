@@ -58,3 +58,7 @@ func filterAlpha(line string) []string {
 func filterMacAddress(line string) []string {
 	return macAddressRegex.FindAllString(line, -1)
 }
+
+func filterUUIDRegex(line string) []string {
+	return uUIDRegex.FindAllString(line, -1)
+}

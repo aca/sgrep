@@ -43,6 +43,7 @@ func init() {
 	addCommand(filterAlpha, "alpha")
 	addCommand(filterCommit, "commit")
 	addCommand(filterMacAddress, "mac", "macaddress")
+	addCommand(filterUUIDRegex, "uuid")
 }
 
 func main() {

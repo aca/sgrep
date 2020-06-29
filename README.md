@@ -14,9 +14,8 @@ Usage
 » sgrep help
 usage: sgrep [flags] pattern...
 
-example: 
+example:
   cat txt | sgrep hostname ipv4
-  ifconfig wlp2s0 | sgrep mac
 
 pattern:
   hostname, host
@@ -28,10 +27,11 @@ pattern:
   alpha
   commit
   mac, macaddress
+  uuid
 
 flag:
   -f int
-    	field selector, replaces "awk '{print $3}'" as "-f3"
+        field selector, replaces "awk '{print $3}'" as "-f3"
   -s string
-    	seperator (default " ")
+        seperator (default " ")
 ```

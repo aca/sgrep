@@ -61,10 +61,10 @@ const (
 )
 
 var (
-	ipv4Regex = regexp.MustCompile(ipv4RegexString)
-	ipv6Regex = regexp.MustCompile(ipv6RegexString)
-	httpRegex = regexp.MustCompile(httpRegexString)
-	commitRegex = regexp.MustCompile(commitRegexString)
+	ipv4Regex       = regexp.MustCompile(ipv4RegexString)
+	ipv6Regex       = regexp.MustCompile(ipv6RegexString)
+	httpRegex       = regexp.MustCompile(httpRegexString)
+	commitRegex     = regexp.MustCompile(commitRegexString)
 	macAddressRegex = regexp.MustCompile(macAddressRegexString)
 
 	alphaRegex                 = regexp.MustCompile(alphaRegexString)
@@ -106,5 +106,4 @@ var (
 	ethAddressRegex            = regexp.MustCompile(ethAddressRegexString)
 	ethaddressRegexUpper       = regexp.MustCompile(ethAddressUpperRegexString)
 	ethAddressRegexLower       = regexp.MustCompile(ethAddressLowerRegexString)
-	
 )
